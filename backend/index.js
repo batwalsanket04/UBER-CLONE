@@ -9,8 +9,24 @@ const { configDotenv } = require('dotenv');
 
 app.use(cors());
 
+// DB Connection
 
-app.get('/', (req, res) => {
+const conn=require('./config/db')
+
+//import route file
+
+const UserRoute=require('./routes/user.route');
+
+
+
+//Apis
+
+app.use('/api/user',UserRoute);
+
+
+
+
+app.get("/", (req, res) => {
     res.send("API Working");
 });
 

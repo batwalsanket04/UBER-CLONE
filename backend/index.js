@@ -20,12 +20,14 @@ const conn=require('./config/db')
 //import route file
 
 const UserRoute=require('./routes/user.route');
+const captRoute=require('./routes/captain.route')
 
 
 
-//Apis
+//Apis endpoints
 
 app.use("/api/user",UserRoute);
+app.use("/api/user/captain",captRoute)
 
 
 

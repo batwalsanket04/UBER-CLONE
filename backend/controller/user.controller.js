@@ -59,6 +59,7 @@ const LoginUser=async(req,res)=>{
      const token=JWT.sign(
         {id:user._id,name:user.fullname,email:user.email},
         process.env.JWT_SECRET,
+        
      );
 
      res.status(200).json({success:true,message:"Login Successfully",

@@ -6,6 +6,10 @@ dotenv.config();
 const cors=require('cors');
 const { configDotenv } = require('dotenv');
 
+//middleware
+
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 app.use(cors());
 
@@ -21,7 +25,7 @@ const UserRoute=require('./routes/user.route');
 
 //Apis
 
-app.use('/api/user',UserRoute);
+app.use("/api/user",UserRoute);
 
 
 

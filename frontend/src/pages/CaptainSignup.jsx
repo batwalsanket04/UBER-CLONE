@@ -4,8 +4,10 @@ import { NavLink } from 'react-router-dom';
 const CaptainSignup = () => {
 
   const [form, setForm] = useState({
-    firstname: '',
-    lastname: '',
+    fullName:{
+        firstname:'',
+        lastname:'',
+      },
     email: '',
     password: ''
   });
@@ -20,8 +22,10 @@ const CaptainSignup = () => {
     console.log(form);
 
     setForm({
-      firstname: '',
-      lastname: '',
+     fullName:{
+        firstname:'',
+        lastname:'',
+      },
       email: '',
       password: ''
     });
@@ -49,7 +53,7 @@ const CaptainSignup = () => {
                 className="bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border"
                 type="text"
                 name="firstname"
-                value={form.firstname}
+                value={form.fullName.firstname}
                 onChange={handleForm}
                 placeholder="First Name"
               />
@@ -58,7 +62,7 @@ const CaptainSignup = () => {
                 className="bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border"
                 type="text"
                 name="lastname"
-                value={form.lastname}
+                value={form.fullName.lastname}
                 onChange={handleForm}
                 placeholder="Last Name"
               />

@@ -61,7 +61,7 @@ const Captainlogin = () => {
 
           </form>
 
-          <p className="mt-1 text-center text-sm">
+          <p className="mt-6 text-center text-sm">
             Join a fleet?
             <NavLink
               to={"/captain-signup"}
@@ -71,7 +71,7 @@ const Captainlogin = () => {
             </NavLink>
           </p>
 
-          <div className="mt-2">
+          <div className="mt-8">
             <NavLink
               to={"/user-login"}
               className="bg-amber-600 flex text-white mb-7 items-center justify-center py-3 w-full rounded-lg font-semibold"

@@ -4,79 +4,86 @@ const bcrypt=require('bcrypt')
 const JWT=require('jsonwebtoken')
 
 
-const createUser=async(req,res)=>{
-    try {
+const createUser = async (req, res) => {
+  try {
+    const { fullName, email, password } = req.body;
 
-  const {fullname,email,password}=req.body;
-
-   const passwordRegex =
-     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-   if(!fullname || !email || !password)
-   {
-  return  res.status(500).json({message:"All field are required"})
-   }
-
-   if(!passwordRegex.test(password))
-   {
-   return  res.status(400).json({message:" Password must be 8+ chars, include uppercase, lowercase, number & special char"})
-   }
-
-   const userExist=await UserModel.findOne({email})
-   if(userExist){
-   return res.status(400).json({message:"User already exist"})
-   }
-
-    const hashedPassword=await bcrypt.hash(password,10)
-
-    const newUser= await UserModel.create({fullname,email,password:hashedPassword})
-    res.status(200).json({success:true,message:"User Created successfully",user:newUser})
-    } catch (error) {
-       console.log("Registration Error:",error)
-       res.status(500).json({success:false,message:"Registration failed"})
-
+    if (!fullName?.firstname || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
     }
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message: "Password must be strong"
+      });
+    }
+
+    const userExist = await UserModel.findOne({ email });
+    if (userExist) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await UserModel.create({
+      fullName,
+      email,
+      password: hashedPassword
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "User Created Successfully",
+      user: newUser
+    });
+
+  } catch (error) {
+    console.log("Registration Error:", error);
+    res.status(500).json({ message: "Registration failed" });
+  }
+};
+
+
+const LoginUser = async(req,res)=>{
+  try {
+    const { email, password } = req.body;
+
+    const user = await UserModel.findOne({ email }) 
+
+    if(!user){
+      return res.status(404).json({ message:"User not found" })
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+    if(!isMatch){
+      return res.status(400).json({ message:"Invalid Credentials" })
+    }
+
+    const token=JWT.sign(
+      { id:user._id, email:user.email },
+      process.env.JWT_SECRET
+    );
+
+    res.status(200).json({
+      success:true,
+      message:"Login Successful",
+      token,
+      user:{
+        _id:user._id,
+        fullName:user.fullName,
+        email:user.email
+      }
+    })
+
+  } catch (error) {
+    console.log("Login Error:",error);
+    res.status(500).json({ message:"Server error" })
+  }
 }
 
-const LoginUser=async(req,res)=>{
-    try {
-        const{fullname,email,password}=req.body;
-    
-    const user=await UserModel.findOne({email}) 
-
-    if(!user)
-    {
-      return  res.status(500).json({success:false,message:"User not found"})
-    }
-
-    const isMatch=await bcrypt.compare(password, user.password)
-
-     if(!isMatch)
-     {
-       return res.status(400).json({success:false,message:"Invalid Credentials"})
-     }
-
-     const token=JWT.sign(
-        {id:user._id,name:user.fullname,email:user.email},
-        process.env.JWT_SECRET,
-        
-     );
-
-     res.status(200).json({success:true,message:"Login Successfully",
-        token,
-        user:{
-            _id:user._id,
-            name:user.fullname,
-            email:user.email
-        }
-     })
-        
-    } catch (error) {
-        console.log("Login Error:",error);
-        res.status(400).json({success:false,message:"Failed to connecting server"})
-        
-    }
-}
 
 const getAllUser=async(req,res)=>{
     try {

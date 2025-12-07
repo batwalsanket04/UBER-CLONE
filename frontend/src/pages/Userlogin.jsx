@@ -78,7 +78,7 @@ const Userlogin = () => {
             </p>
           </div>
 
-          <div className="mt-2">
+          <div className="mt-6">
             <NavLink
               to={"/captain-login"}
               className="bg-green-600 flex text-white mb-7 items-center justify-center py-3 w-full rounded-lg font-semibold"

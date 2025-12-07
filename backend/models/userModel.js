@@ -7,7 +7,7 @@ const UserSchema=new mongoose.Schema({
       ref: "User",       
     
     },
-    fullname:{
+    fullName:{
         firstname:{
             type:String,
             required:true,

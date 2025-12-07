@@ -36,34 +36,63 @@ res.status(200).json({success:true,message:"Captain Created Successfully",user:n
 }
 
 
+const loginCaptain = async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
-const loginCaptain=async(req,res)=>{
-    const {email,password}=req.body;
-try {
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and Password are required"
+            });
+        }
 
-    const user=await captain.findOne({email}) 
+        const user = await captain.findOne({ email });
 
-if(!user) return res.status(500).json("captain  not Found")
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "Captain not found"
+            });
+        }
 
-const isMatch=await bcrypt.compare(password,user.password)
+        const isMatch = await bcrypt.compare(password, user.password);
 
-if(!isMatch) return res.status(500).json({message:"Invalid credentials"})
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid credentials"
+            });
+        }
 
-const token=JWT.sign(
-    {
-        id:user._id,
-        email:user.email,
-    },
-    process.env.JWT_SECRET
-);
+        const token = JWT.sign(
+            {
+                id: user._id,
+                email: user.email,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
 
-res.status(200).json({success:true,message:"captain  Login successfully",token,user:{_id:user._id,email:user.email,password:user.password }})
-    
-} catch (error) {
- console.log("Error:",error)
- res.status(500).json({message:"Failed to connecting server"})   
-}
-}
+        res.status(200).json({
+            success: true,
+            message: "Captain Login successfully",
+            token,
+            user: {
+                _id: user._id,
+                email: user.email,
+            }
+        });
+
+    } catch (error) {
+        console.log("Error:", error);
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message
+        });
+    }
+};
+
 
 
 

@@ -59,7 +59,7 @@ const UserSignup = () => {
     const result = await axios.post(
       'http://localhost:3000/api/user/register',
       {
-        fullName: form.fullName,   // ✅ OBJECT
+        fullName: form.fullName,  
         email,
         password
       }

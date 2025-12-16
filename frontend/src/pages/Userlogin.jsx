@@ -1,9 +1,11 @@
+import axios from "axios";
 import React from "react";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Userlogin = () => {
   const [form, setForm] = useState({ email: "", password: "" });
+  const nav=useNavigate();
 
   const handleForm = (e) => {
     const { name, value } = e.target;
@@ -11,17 +13,25 @@ const Userlogin = () => {
     console.log(form);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit=async(e) => {
     e.preventDefault();
-    console.log(form);
-    setForm({ email: "", password: "" });
+    try {
+      const result=await axios.post('http://localhost:3000/api/user/login',form)
+      localStorage.setItem("token", result.data.token)
+      alert(result.data.message || "Login Successfully")
+      setForm({email:"",password:""})
+      nav("/home")
+    } catch (error) {   
+      console.log(error.response?.data?.message || "Login Failed")
+    }
+    
   };
 
   return (
     <>
-      {/* MOBILE + DESKTOP VIEW (NO BLOCK) */}
+      
       <div className="flex justify-center min-h-screen bg-gray-100">
-        {/* ✅ ADDED overflow-y-auto */}
+       
         <div className="p-5 flex flex-col justify-between w-full max-w-sm overflow-y-auto">
 
           <img

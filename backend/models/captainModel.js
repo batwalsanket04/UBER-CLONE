@@ -13,12 +13,14 @@ const captainSchema=new mongoose.Schema({
            minlength:[3,"Lastname must be at least 3 characters long"]
         }
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-    },
+   email: {
+  type: String,
+  required: true,
+  unique: true,
+  lowercase: true,
+  trim: true
+}
+,
     password:{
         type:String,
         required:true,

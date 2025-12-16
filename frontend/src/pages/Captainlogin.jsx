@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink } from 'react-router-dom';
+import axios from 'axios'
 
 const Captainlogin = () => {
 
@@ -10,15 +11,30 @@ const Captainlogin = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(form);
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    setForm({
-      email: "",
-      password: ""
-    });
-  };
+  try {
+    const result = await axios.post(
+      "http://localhost:3000/api/captain/login",
+      {
+        email: form.email,
+        password: form.password
+      }
+    );
+
+   
+    localStorage.setItem("CaptainToken", result.data.token);
+
+    alert(result.data.message || "Login Successfully");
+    Navigate("/captain-home")
+
+  } catch (error) {
+    alert(
+      error.response?.data?.message || "Login failed"
+    );
+  }
+};
 
   return (
     <>

@@ -4,94 +4,112 @@ const bcrypt=require('bcrypt')
 
 
 
-const createCaptain=async(req,res)=>{
-    const {fullname,email,password,vehicle}=req.body
-try {
-       const passwordRegex =
-     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const createCaptain = async (req, res) => {
+  try {
+    let { fullname, email, password, vehicle } = req.body;
 
-     if(!fullname || !email || !password || !vehicle)
-     {
-        return res.status(500).json({message:"All field are required"})
-     }
+    email = email.toLowerCase();
 
-     if(!passwordRegex.test(password)){
-        return res.status(500).json("Password must be at least 8 character and character,symbol,capital letters")
-     }
+    if (!fullname || !email || !password || !vehicle) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-     const isMatch=await captain.findOne({email});
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message:
+          "Password must contain uppercase, lowercase, number & special character"
+      });
+    }
 
-     if(isMatch) return res.status(500).json({message:"Captain already exist"})
+    const existingCaptain = await captain.findOne({ email });
+    if (existingCaptain) {
+      return res.status(400).json({ message: "Captain already exists" });
+    }
 
-     const hashedPassword=await bcrypt.hash(password,10)
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-const newUser=await captain.create({fullname,email,vehicle,password:hashedPassword})
-res.status(200).json({success:true,message:"Captain Created Successfully",user:newUser})
-    
-} catch (error) {
-    console.log("Registration Error:",error);
-    res.status(500).json({success:false,message:"Registration failed"})
-}
-}
+    const newUser = await captain.create({
+      fullname,
+      email,
+      password: hashedPassword,
+      vehicle
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Captain Created Successfully",
+      user: newUser
+    });
+
+  } catch (error) {
+    console.log("Registration Error:", error);
+    res.status(500).json({ message: "Registration failed" });
+  }
+};
+
 
 
 const loginCaptain = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "Email and Password are required"
-            });
-        }
-
-        const user = await captain.findOne({ email });
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "Captain not found"
-            });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid credentials"
-            });
-        }
-
-        const token = JWT.sign(
-            {
-                id: user._id,
-                email: user.email,
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
-        );
-
-        res.status(200).json({
-            success: true,
-            message: "Captain Login successfully",
-            token,
-            user: {
-                _id: user._id,
-                email: user.email,
-            }
-        });
-
-    } catch (error) {
-        console.log("Error:", error);
-        res.status(500).json({
-            message: "Server Error",
-            error: error.message
-        });
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and Password are required"
+      });
     }
+
+    const user = await captain
+      .findOne({ email: email.toLowerCase() })
+      .select("+password");
+     
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Captain not found"
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials"
+      });
+    }
+ 
+    const token = JWT.sign(
+      { id: user._id, 
+        email: user.email,
+        role:"captain"
+       },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+
+    res.status(200).json({
+      success: true,    
+      message: "Captain Login successfully",
+      token,
+      user: {
+        _id: user._id,
+        email: user.email
+      }
+    });
+
+  } catch (error) {
+    console.log("Login Error:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
 };
+
 
 
 

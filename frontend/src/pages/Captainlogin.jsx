@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
-import { Navigate, NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 const Captainlogin = () => {
 
   const [form, setForm] = useState({ email: "", password: "" });
+  const nav=useNavigate();
+
+   useEffect(() => {
+    localStorage.removeItem("CaptainToken");
+  }, []);
 
   const handleForm = (e) => {
     const { name, value } = e.target;
@@ -27,7 +32,7 @@ const handleSubmit = async (e) => {
     localStorage.setItem("CaptainToken", result.data.token);
 
     alert(result.data.message || "Login Successfully");
-    Navigate("/captain-home")
+    nav("/captain-home")
 
   } catch (error) {
     alert(

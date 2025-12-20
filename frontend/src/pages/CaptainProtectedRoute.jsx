@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 
 const CaptainProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("CaptainToken");
 
  
   if (!token) {

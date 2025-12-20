@@ -1,7 +1,47 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
+import CaptainDetails from "../Componants/CaptainDetails";
+import RidePopup from "../Componants/RidePopup";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap/gsap-core";
+import ConfirmRidepopup from "../Componants/ConfirmRidepopup";
 
 const CaptainHome = () => {
+ const[ridepopup,setridepopup]=useState(true)
+ const ridepopupRef=useRef(null)
+ const[confirmridepopup,setconfirmridepopup]=useState(false)
+ const confirmridepopupRef=useRef(null)
+
+
+ useGSAP(
+     function () {
+       if (ridepopup) {
+         gsap.to(ridepopupRef.current, {
+           transform: "translateY(0)",
+         });
+       } else {
+         gsap.to(ridepopupRef.current, {
+           transform: "translateY(100%)",
+         });
+       }
+     },
+     [ridepopup]
+   );
+   useGSAP(
+     function () {
+       if (confirmridepopup) {
+         gsap.to(confirmridepopupRef.current, {
+           transform: "translateY(0)",
+         });
+       } else {
+         gsap.to(confirmridepopupRef.current, {
+           transform: "translateY(100%)",
+         });
+       }
+     },
+     [confirmridepopup]
+   );
+
   return (
     <div className="h-screen w-full flex justify-center bg-gray-100 overflow-hidden">
       <div className="w-full max-w-[420px] bg-white h-full flex flex-col">
@@ -29,34 +69,15 @@ const CaptainHome = () => {
           />
         </div>
         <div className="h-2/5 p-6">
-          <div className="flex items-center justify-between ">
-            <div className="flex  justify-between">
-              <img className="h-10 w-10  rounded-full object-cover" src="https://tse3.mm.bing.net/th/id/OIP.X47s-sdJeejd46HIDWBLPQHaLH?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="" />
-              <h4 className="text-lg p-2">Harsh patel</h4>
-            </div>
-            <div className=" p-6">
-              <h4 className="text-xl font-semibold">$10.60</h4>
-              <p className="text-sm bg-gray-200 text-center rounded-xl">Earned</p>
-            </div>
-          </div>
-          <div className="flex p-3 bg-gray-100 rounded-xl justify-center gap-4 items-start">
-            <div className="text-center">
-              <i className="text-3l mb-2 font-thin ri-calendar-schedule-line"></i>
-            <h5 className="text-lg">10.5 hr</h5>
-            <p className="text-small text-gray-600">Hours Online</p>
-            </div>
-            <div className="text-center">
-              <i className="text-3xlmb-2  font-thin ri-dashboard-2-line"></i>
-              <h5 className="text-lg">10.5 hr</h5>
-            <p className="text-small text-gray-600">Hours Online</p>
-            </div>
-            <div className="text-center">
-              <i className="text-3xlmb-2  font-thin ri-book-line"></i>
-             <h5 className="text-lg">10.5 hr</h5>
-            <p className="text-small text-gray-600">Hours Online</p>
-            </div>
-          </div>
+         <CaptainDetails/>
         </div>
+        <div ref={ridepopupRef} className="fixed w-full max-w-[420px] translate-y-full z-10 bottom-0   bg-white p-3 py-6 px-8">
+           <RidePopup setridepopup={setridepopup} setconfirmridepopup={setconfirmridepopup}/>
+        </div>
+      <div ref={confirmridepopupRef} className="fixed w-full max-w-[420px] translate-y-full z-10 bottom-0   bg-white p-3 py-6 px-8">
+           <ConfirmRidepopup setconfirmridepopup={setconfirmridepopup} setridepopup={setridepopup}/>
+        </div>
+
       </div>
     </div>
   );

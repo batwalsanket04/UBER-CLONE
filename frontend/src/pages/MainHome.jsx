@@ -168,7 +168,7 @@ const MainHome = () => {
 
         <div
           ref={vehicalpanelRef}
-          className=" fixed  w-full max-w-[420px] z-10 bottom-0 bg-white p-3 py-6 px-8"
+          className=" fixed  w-full max-w-[420px] z-10 translate-y-full bottom-0 bg-white p-3 py-6 px-8"
         >
           <h5
             ref={vehicalpanelRef}
@@ -252,7 +252,7 @@ const MainHome = () => {
 
         <div
           ref={confirmRidepanelRef}
-          className="fixed w-full max-w-[420px] z-10 bottom-0 bg-white p-3 py-6 px-8"
+          className="fixed w-full max-w-[420px] z-10 bottom-0 translate-y-full bg-white p-3 py-6 px-8"
         >
           <ComfirmRide
   ref={confirmRidepanelRef}
@@ -263,7 +263,7 @@ const MainHome = () => {
         </div>
         <div
           ref={lookingDriverRef}
-          className="fixed w-full max-w-[420px] z-10 bottom-0 bg-white p-3 py-6 px-8"
+          className="fixed w-full max-w-[420px] z-10 bottom-0 translate-y-full bg-white p-3 py-6 px-8"
         >
           <LookingForDriver
             SetlookingDriver={setLookingDriver}

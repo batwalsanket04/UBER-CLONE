@@ -22,7 +22,7 @@ const Userlogin = () => {
       setForm({email:"",password:""})
       nav("/home")
     } catch (error) {   
-      console.log(error.response?.data?.message || "Login Failed")
+      alert(error.response?.data?.message || "Login Failed")
     }
     
   };

@@ -1,38 +1,28 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React from 'react'
+import { NavLink } from 'react-router-dom';
 
-const ConfirmRidepopup = (props) => {
- 
-  const[form,setform]=useState({otp:''})
-
-  const SubmitHandle=(e)=>{
-e.preventDefault();
-
-
-  }
-
+const Finish = (props) => {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+   <div className="min-h-screen flex flex-col bg-white">
 
       {/* Sticky Header */}
       <div className="sticky top-0 z-10 bg-white">
         <h5
-          onClick={() => props.setridepopup(false)}
+          onClick={() => props.setFinishride(false)}
           className="p-2 text-center"
         >
           <i className="ri-arrow-down-wide-line text-2xl text-gray-300"></i>
         </h5>
 
         <h3 className="text-2xl text-center font-semibold mb-2">
-          Confirm this ride to start
-        </h3>
+          Finish this ride        </h3>
       </div>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto px-3 pt-2">
 
         {/* Rider Info */}
-        <div className="flex items-center justify-between mt-4 border-3 border-yellow-400 rounded-2xl p-3">
+        <div className="flex items-center justify-between mt-4 bg-yellow-400 rounded-2xl p-3">
           <div className="flex items-center gap-3">
             <img
               className="h-10 w-10 rounded-full object-cover"
@@ -74,41 +64,19 @@ e.preventDefault();
             </div>
           </div>
         </div>
-
         {/* Actions */}
         <div className="mt-10 pb-6">
-         <form onSubmit={(e)=>SubmitHandle(e)} >
-           <input
-           value={form.otp}
-           onChange={(e)=>setform(e.target.value)}
-            type="text"
-            name="otp"
-            placeholder="Enter OTP"
-            className="bg-[#eee] mb-3 px-2 font-mono text-lg text-center rounded-lg w-full py-2"
-          />
-
           <NavLink
-            to="/captain-riding"
+            to="/captain-home"
             onClick={() => props.setridepopup(false)}
             className="w-full flex justify-center text-white font-semibold p-2 rounded-lg bg-green-400"
-          >
-            Confirm
+          >Finish ride
           </NavLink>
-
-          <button
-            onClick={() => {
-              props.setconfirmridepopup(false);
-              props.setridepopup(false);
-            }}
-            className="w-full mt-3 bg-red-500 text-white font-semibold p-2 rounded-lg"
-          >
-            Cancel
-          </button>
-         </form>
+          <p className='mt-10 text-xs'>Click on finish ride button if you have completed the payment</p>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ConfirmRidepopup;
+export default Finish
